@@ -28,7 +28,6 @@ function findItems(filter, sort, paginate) {
   }
 
   if (paginate) {
-    debugger
     criteria.limit = paginate.limit,
     criteria.offset = paginate.offset
   }

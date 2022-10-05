@@ -39,21 +39,30 @@ router.get('/find', async (req, res) => {
   try {
     const { query: { filterColumn, filterCondition, filterValue, sortColumn, sortOrder, paginatePage, paginateSize } } = req
 
-    const filter = {
-      column: filterColumn,
-      condition: filterCondition,
-      value: filterValue
-    }
+    let filter = null
+    
+    if (filterColumn != undefined && filterCondition != undefined && filterValue != undefined)
+      filter = {
+        column: filterColumn,
+        condition: filterCondition,
+        value: filterValue
+      }
 
-    const sort = {
-      column: sortColumn,
-      order: sortOrder
-    }
+    let sort = null
 
-    const paginate = {
-      limit: paginateSize,
-      offset: paginatePage * paginateSize
-    }
+    if (sortColumn != undefined && sortOrder != undefined)
+      sort = {
+        column: sortColumn,
+        order: sortOrder
+      }
+
+    let paginate = null
+
+    if (paginatePage != undefined && paginateSize != undefined)
+      paginate = {
+        limit: paginateSize,
+        offset: paginatePage * paginateSize
+      }
 
     const items = await findItems(filter, sort, paginate)
 
@@ -66,7 +75,6 @@ router.get('/find', async (req, res) => {
 router.get('/paginate', async (req, res) => {
   try {
     const { query: { page, size } } = req
-
     const items = await paginateItems(page, size)
 
     res.status(200).json(items)
