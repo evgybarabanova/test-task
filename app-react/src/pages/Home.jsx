@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./Home.css";
-import { retrieveItems, findItems, paginateItems } from "../logic";
+import { findItems } from "../logic";
 
 export default function Home() {
   const [items, setItems] = useState([]);
@@ -27,12 +27,73 @@ export default function Home() {
     const condition = event.target.condition.value;
     const value = event.target.value.value;
 
-    const filter = { column, condition, value }
-    setFilter(filter)
+    const filter = { column, condition, value };
+    setFilter(filter);
 
     try {
-        findItems(filter, sort, paginate)
+      findItems(filter, sort, paginate)
         .then((items) => setItems(items))
+        .catch((error) => alert(error.message));
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  const handleSort = (column, order) => {
+    const sort = { column, order };
+    const resetPaginate = { page: 0, size: paginate.size };
+    try {
+      findItems(filter, sort, resetPaginate)
+        .then((items) => {
+          setItems(items);
+          setSort(sort);
+          setPaginate(resetPaginate);
+        })
+        .catch((error) => alert(error.message));
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  const handlePrevPaginate = (page, size) => {
+    const prevPaginate = { page: paginate.page - 1, size: paginate.size };
+
+    try {
+      findItems(filter, sort, prevPaginate)
+        .then((items) => {
+          setItems(items);
+          setPaginate(prevPaginate);
+        })
+        .catch((error) => alert(error.message));
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  const handleCurrentPaginate = (page, size) => {
+    const currPaginate = { page: page, size: size };
+
+    try {
+      findItems(filter, sort, paginate)
+        .then((items) => {
+          setItems(items);
+          setPaginate(currPaginate);
+        })
+        .catch((error) => alert(error.message));
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  const handleNextPaginate = (page, size) => {
+    const nextPaginate = { page: paginate.page + 1, size: paginate.size };
+
+    try {
+      findItems(filter, sort, nextPaginate)
+        .then((items) => {
+          setItems(items);
+          setPaginate(nextPaginate);
+        })
         .catch((error) => alert(error.message));
     } catch (error) {
       alert(error.message);
@@ -65,34 +126,79 @@ export default function Home() {
         <table className="home-page-table">
           <thead className="home-page-head">
             <tr className="home-page-tr">
-              <th>Дата</th>
-              <th>
+              <th className="home-page-th">Дата</th>
+
+              <th className="home-page-th">
                 Название
-                {/* <button
+                <button
+                  class="arrow"
                   type="button"
-                  onClick={() => setSortedField("name")}
-                ></button> */}
+                  onClick={() => {
+                    handleSort("name", "asc");
+                  }}
+                >
+                  ⬆️
+                </button>
+                <button
+                  class="arrow"
+                  type="button"
+                  onClick={() => {
+                    handleSort("name", "desc");
+                  }}
+                >
+                  ⬇️
+                </button>
               </th>
-              <th>
+
+              <th className="home-page-th">
                 Количество
-                {/* <button
+                <button
+                  class="arrow"
                   type="button"
-                  onClick={() => setSortedField("count")}
-                ></button> */}
+                  onClick={() => {
+                    handleSort("count", "asc");
+                  }}
+                >
+                  ⬆️
+                </button>
+                <button
+                  class="arrow"
+                  type="button"
+                  onClick={() => {
+                    handleSort("count", "desc");
+                  }}
+                >
+                  ⬇️
+                </button>
               </th>
-              <th>
+
+              <th className="home-page-th">
                 Расстояние
-                {/* <button
+                <button
+                  class="arrow"
                   type="button"
-                  onClick={() => setSortedField("distance")}
-                ></button> */}
+                  onClick={() => {
+                    handleSort("distance", "asc");
+                  }}
+                >
+                  ⬆️
+                </button>
+                <button
+                  class="arrow"
+                  type="button"
+                  onClick={() => {
+                    handleSort("distance", "desc");
+                  }}
+                >
+                  ⬇️
+                </button>
               </th>
             </tr>
           </thead>
           <tbody className="home-page-body">
             {items.map((item) => (
               <tr className="home-page-td">
-                <td>{item.date}</td>
+                <td>{item.date.substring(10, 0)}</td>
                 <td>{item.name}</td>
                 <td>{item.count}</td>
                 <td>{item.distance}</td>
@@ -100,11 +206,16 @@ export default function Home() {
             ))}
           </tbody>
         </table>
-
-        {/* <div className="paginate">
-          <button></button>
-        </div> */}
       </main>
+      <button className="home-page-btn-prev" onClick={handlePrevPaginate}>
+        пред
+      </button>
+      <button className="home-page-btn-cur" onClick={handleCurrentPaginate}>
+        1
+      </button>
+      <button className="home-page-btn-next" onClick={handleNextPaginate}>
+        след
+      </button>
     </>
   );
 }
