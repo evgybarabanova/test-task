@@ -70,20 +70,20 @@ export default function Home() {
     }
   };
 
-  const handleCurrentPaginate = (page, size) => {
-    const currPaginate = { page: page, size: size };
+  // const handlePagesPaginate = (page, size) => {
+  //   const pagePaginate = { page: paginate.page, size: 5 };
 
-    try {
-      findItems(filter, sort, paginate)
-        .then((items) => {
-          setItems(items);
-          setPaginate(currPaginate);
-        })
-        .catch((error) => alert(error.message));
-    } catch (error) {
-      alert(error.message);
-    }
-  };
+  //   try {
+  //     findItems(filter, sort, pagePaginate)
+  //       .then((items) => {
+  //         setItems(items);
+  //         setPaginate(pagePaginate);
+  //       })
+  //       .catch((error) => alert(error.message));
+  //   } catch (error) {
+  //     alert(error.message);
+  //   }
+  // };
 
   const handleNextPaginate = (page, size) => {
     const nextPaginate = { page: paginate.page + 1, size: paginate.size };
@@ -207,15 +207,14 @@ export default function Home() {
           </tbody>
         </table>
       </main>
-      <button className="home-page-btn-prev" onClick={handlePrevPaginate}>
-        пред
-      </button>
-      <button className="home-page-btn-cur" onClick={handleCurrentPaginate}>
-        1
-      </button>
-      <button className="home-page-btn-next" onClick={handleNextPaginate}>
-        след
-      </button>
+      <div className="home-page-paginate-btn">
+        <button onClick={handlePrevPaginate}>⬅️</button>
+        {/* <button onClick={handlePagesPaginate}>1</button>
+        <button onClick={handlePagesPaginate}>2</button>
+        ...
+        <button onClick={handlePagesPaginate}>5</button> */}
+        <button onClick={handleNextPaginate}>➡️</button>
+      </div>
     </>
   );
 }
