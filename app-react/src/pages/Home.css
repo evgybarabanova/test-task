@@ -28,3 +28,7 @@
 .arrow {
 border: none;
 }
+
+.button{
+  cursor: pointer;
+}

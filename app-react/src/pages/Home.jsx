@@ -3,16 +3,17 @@ import "./Home.css";
 import { findItems } from "../logic";
 
 export default function Home() {
-  const [items, setItems] = useState([]);
+  const [itemsAndCount, setItemsAndCount] = useState();
   const [filter, setFilter] = useState(null);
   const [sort, setSort] = useState(null);
   const [paginate, setPaginate] = useState({ page: 0, size: 5 });
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     try {
       findItems(filter, sort, paginate)
-        .then((items) => {
-          setItems(items);
+        .then((itemsAndCount) => {
+          setItemsAndCount(itemsAndCount);
         })
         .catch((error) => alert(error.message));
     } catch (error) {
@@ -32,7 +33,7 @@ export default function Home() {
 
     try {
       findItems(filter, sort, paginate)
-        .then((items) => setItems(items))
+        .then((itemsAndCount) => setItemsAndCount(itemsAndCount))
         .catch((error) => alert(error.message));
     } catch (error) {
       alert(error.message);
@@ -44,8 +45,8 @@ export default function Home() {
     const resetPaginate = { page: 0, size: paginate.size };
     try {
       findItems(filter, sort, resetPaginate)
-        .then((items) => {
-          setItems(items);
+        .then((itemsAndCount) => {
+          setItemsAndCount(itemsAndCount);
           setSort(sort);
           setPaginate(resetPaginate);
         })
@@ -55,13 +56,13 @@ export default function Home() {
     }
   };
 
-  const handlePrevPaginate = (page, size) => {
+  const handlePrevPaginate = () => {
     const prevPaginate = { page: paginate.page - 1, size: paginate.size };
 
     try {
       findItems(filter, sort, prevPaginate)
-        .then((items) => {
-          setItems(items);
+        .then((itemsAndCount) => {
+          setItemsAndCount(itemsAndCount);
           setPaginate(prevPaginate);
         })
         .catch((error) => alert(error.message));
@@ -70,28 +71,13 @@ export default function Home() {
     }
   };
 
-  // const handlePagesPaginate = (page, size) => {
-  //   const pagePaginate = { page: paginate.page, size: 5 };
-
-  //   try {
-  //     findItems(filter, sort, pagePaginate)
-  //       .then((items) => {
-  //         setItems(items);
-  //         setPaginate(pagePaginate);
-  //       })
-  //       .catch((error) => alert(error.message));
-  //   } catch (error) {
-  //     alert(error.message);
-  //   }
-  // };
-
-  const handleNextPaginate = (page, size) => {
+  const handleNextPaginate = () => {
     const nextPaginate = { page: paginate.page + 1, size: paginate.size };
 
     try {
       findItems(filter, sort, nextPaginate)
-        .then((items) => {
-          setItems(items);
+        .then((itemsAndCount) => {
+          setItemsAndCount(itemsAndCount);
           setPaginate(nextPaginate);
         })
         .catch((error) => alert(error.message));
@@ -100,13 +86,51 @@ export default function Home() {
     }
   };
 
+  // const numberOfButtons = Math.ceil(itemsAndCount?.count / paginate.size);
+  // const buttons = [];
+  // if (!isNaN(numberOfButtons)) {
+  //   for (let i = 0; i < numberOfButtons; i++) {
+  //     buttons.push(<button>{i + 1}</button>);
+  //   }
+  // }
+
+  const handlePagesPaginate = (page) => {
+    const pagePaginate = { page: page, size: paginate.size };
+
+    try {
+      findItems(filter, sort, pagePaginate)
+        .then((itemsAndCount) => {
+          setItemsAndCount(itemsAndCount);
+          setPaginate(pagePaginate);
+        })
+        .catch((error) => alert(error.message));
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  const numberOfButtons = Math.ceil(itemsAndCount?.count / paginate.size);
+  const buttons = [];
+  if (!isNaN(numberOfButtons)) {
+    for (let i = 0; i < numberOfButtons; i++) {
+      buttons.push(
+        <button key={i} onClick={() => handlePagesPaginate(i)}>
+          {i + 1}
+        </button>
+      );
+    }
+  }
+
   return (
     <>
       <header className="home-page-header">
         <h1 className="home-page-header__title">Table №1</h1>
       </header>
       <main className="home-page-main">
-        <form className="home-page-find-items" onSubmit={handleSubmitFilter}>
+        <form
+          className="home-page-find-itemsAndCount"
+          onSubmit={handleSubmitFilter}
+        >
           <select name="column">
             <option value="0">Выберите колонку:</option>
             <option value="name">Название</option>
@@ -196,7 +220,7 @@ export default function Home() {
             </tr>
           </thead>
           <tbody className="home-page-body">
-            {items.map((item) => (
+            {itemsAndCount?.items.map((item) => (
               <tr className="home-page-td">
                 <td>{item.date.substring(10, 0)}</td>
                 <td>{item.name}</td>
@@ -209,10 +233,7 @@ export default function Home() {
       </main>
       <div className="home-page-paginate-btn">
         <button onClick={handlePrevPaginate}>⬅️</button>
-        {/* <button onClick={handlePagesPaginate}>1</button>
-        <button onClick={handlePagesPaginate}>2</button>
-        ...
-        <button onClick={handlePagesPaginate}>5</button> */}
+        {buttons}
         <button onClick={handleNextPaginate}>➡️</button>
       </div>
     </>

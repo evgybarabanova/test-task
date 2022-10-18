@@ -9,12 +9,12 @@ export default function findItems(filter, sort, paginate) {
     params.filterValue = filter.value
   }
 
-  if (sort != null && sort.column != null && sort.order != null ) {
+  if (sort != null && sort.column != null && sort.order != null) {
     params.sortColumn = sort.column
     params.sortOrder = sort.order
   }
 
-  if (paginate != null && paginate.page != null && paginate.size != null ) {
+  if (paginate != null && paginate.page != null && paginate.size != null) {
     params.paginatePage = paginate.page
     params.paginateSize = paginate.size
   }
@@ -24,9 +24,9 @@ export default function findItems(filter, sort, paginate) {
     params
   })
     .then(response => {
-      const { data: items } = response
-      
-      return items
+      const { data: { rows: items, count } } = response
+
+      return {items, count}
     })
     .catch(error => {
       const message = error.response.data.error
