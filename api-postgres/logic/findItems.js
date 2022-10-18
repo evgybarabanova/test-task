@@ -33,8 +33,8 @@ function findItems(filter, sort, paginate) {
   }
 
   return (async () => {
-    const items = await Item.findAll(criteria)
-    return items
+    const itemsAndCount = await Item.findAndCountAll(criteria)
+    return itemsAndCount
   })()
 }
 

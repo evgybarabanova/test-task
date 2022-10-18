@@ -23,6 +23,14 @@ module.exports = {
       { date: new Date(), name: 'Автономия', count: 17, distance: 1700 },
       { date: new Date(), name: 'Галактика', count: 18, distance: 1800 },
       { date: new Date(), name: 'Квартира', count: 19, distance: 1900 },
+      { date: new Date(), name: 'Дом', count: 20, distance: 2000 },
+      { date: new Date(), name: 'Область', count: 13, distance: 1300 },
+      { date: new Date(), name: 'Район', count: 14, distance: 1400 },
+      { date: new Date(), name: 'Квартал', count: 15, distance: 1500 },
+      { date: new Date(), name: 'Проспект', count: 16, distance: 1600 },
+      { date: new Date(), name: 'Автономия', count: 17, distance: 1700 },
+      { date: new Date(), name: 'Галактика', count: 18, distance: 1800 },
+      { date: new Date(), name: 'Квартира', count: 19, distance: 1900 },
       { date: new Date(), name: 'Дом', count: 20, distance: 2000 }
     ], {});
   },
