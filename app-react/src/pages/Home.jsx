@@ -7,7 +7,6 @@ export default function Home() {
   const [filter, setFilter] = useState(null);
   const [sort, setSort] = useState(null);
   const [paginate, setPaginate] = useState({ page: 0, size: 5 });
-  const [page, setPage] = useState(1);
 
   useEffect(() => {
     try {
@@ -86,14 +85,6 @@ export default function Home() {
     }
   };
 
-  // const numberOfButtons = Math.ceil(itemsAndCount?.count / paginate.size);
-  // const buttons = [];
-  // if (!isNaN(numberOfButtons)) {
-  //   for (let i = 0; i < numberOfButtons; i++) {
-  //     buttons.push(<button>{i + 1}</button>);
-  //   }
-  // }
-
   const handlePagesPaginate = (page) => {
     const pagePaginate = { page: page, size: paginate.size };
 
@@ -102,6 +93,21 @@ export default function Home() {
         .then((itemsAndCount) => {
           setItemsAndCount(itemsAndCount);
           setPaginate(pagePaginate);
+        })
+        .catch((error) => alert(error.message));
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  const handleItemsPerPagePaginate = (size) => {
+    const newPagePaginate = { page: 0, size: size };
+
+    try {
+      findItems(filter, sort, newPagePaginate)
+        .then((itemsAndCount) => {
+          setItemsAndCount(itemsAndCount);
+          setPaginate(newPagePaginate);
         })
         .catch((error) => alert(error.message));
     } catch (error) {
@@ -236,6 +242,23 @@ export default function Home() {
         {buttons}
         <button onClick={handleNextPaginate}>➡️</button>
       </div>
+
+      <p>Items per page</p>
+      <form>
+        <select
+          // value={paginateItems}
+          onChange={(e) => {
+            const dropSize = e.target.value;
+            handleItemsPerPagePaginate(Number(dropSize));
+          }}
+        >
+          {[1, 3, 5, 10, 20].map((page) => (
+            <option key={page} value={page}>
+              Show {page}
+            </option>
+          ))}
+        </select>
+      </form>
     </>
   );
 }

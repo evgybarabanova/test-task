@@ -29,7 +29,7 @@ function findItems(filter, sort, paginate) {
 
   if (paginate) {
     criteria.limit = paginate.limit,
-    criteria.offset = paginate.offset
+      criteria.offset = paginate.offset
   }
 
   return (async () => {
