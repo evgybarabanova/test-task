@@ -115,6 +115,21 @@ export default function Home() {
     }
   };
 
+  const handleGoToPagePaginate = (page) => {
+    const goToPagePaginate = {page: page, size: paginate.size};
+
+    try {
+      findItems(filter, sort, goToPagePaginate)
+        .then((itemsAndCount) => {
+          setItemsAndCount(itemsAndCount);
+          setPaginate(goToPagePaginate);
+        })
+        .catch((error) => alert(error.message));
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
   const numberOfButtons = Math.ceil(itemsAndCount?.count / paginate.size);
   const buttons = [];
   if (!isNaN(numberOfButtons)) {
@@ -241,12 +256,26 @@ export default function Home() {
         <button onClick={handlePrevPaginate}>⬅️</button>
         {buttons}
         <button onClick={handleNextPaginate}>➡️</button>
-      </div>
-
-      <p>Items per page</p>
-      <form>
+        <span>
+          Page{" "}
+          <strong>
+            {paginate.page + 1} of {buttons.length}
+          </strong>{" "}
+        </span>
+        <span>
+          | Go to page:{' '}
+          <input
+            type="number"
+            // defaultValue={paginate.page + 1}
+            onChange={e => {
+              const page = e.target.value ? Number(e.target.value) - 1 : 0
+              handleGoToPagePaginate(page)
+            }}
+            style={{ width: '100px' }}
+          />
+        </span>{' '}
+        <p>Items per page</p>
         <select
-          // value={paginateItems}
           onChange={(e) => {
             const dropSize = e.target.value;
             handleItemsPerPagePaginate(Number(dropSize));
@@ -258,7 +287,7 @@ export default function Home() {
             </option>
           ))}
         </select>
-      </form>
+      </div>
     </>
   );
 }
